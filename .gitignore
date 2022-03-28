@@ -1,0 +1,5 @@
+.vs
+Compiler/bin
+Compiler/obj
+
+!Compiler/bin/Debug/netcoreapp3.1/a.exe
