@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Compiler"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Mini Java Compiler" Height="450" Width="800">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
@@ -21,23 +21,32 @@
 				BorderBrush="Black"
 				Grid.Column="1"
 				Grid.Row="0" >
-			<TextBlock Name="OutputBlock"
+            <TextBlock Name="OutputBlock"
+                        Padding="10"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
 						Text="The output"
-						TextWrapping="Wrap"/>
-		</Border>
+						TextWrapping="Wrap" 
+						Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" 
+						FontFamily="Verdana" 
+						FontWeight="Normal" 
+						FontStyle="Normal"/>
+        </Border>
 		
 		<!--Button to compile with-->
-		<Button Name="CompileButton"
+        <Grid Grid.Column="1" 
+              Grid.Row="1"
+              Name="ButtonGrid"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+            <Button Name="CompileButton"
 				Content="Compile"
 				VerticalAlignment="Center" 
 				HorizontalAlignment="Center" 
 				Height="50" 
 				Width="150"
-				Grid.Column="1" 
-				Grid.Row="1"
 				Click="OnCompileButtonClicked"/>
+        </Grid>
 		
 		<!--Text box to write the Java code-->
 		<Border BorderThickness="1" 
@@ -46,14 +55,19 @@
 				Grid.RowSpan="2"
 				Grid.Column="0" >
 			<TextBox Name="InputBox"
+                     Padding="10"
 					 HorizontalAlignment="Stretch" 
 					 VerticalAlignment="Stretch"
 					 AcceptsReturn="True" 
 					 AcceptsTab="True" 
-					 Text="TextBox" 
 					 TextWrapping="Wrap"
 					 FontSize="12" 
-					 FontFamily="Roboto" />
+					 FontFamily="Roboto" 
+                     FontStyle="Italic" 
+                     FontWeight="Normal" 
+                     Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" 
+                     Foreground="DarkGray"
+                     Text="Your Java code here..."/>
 			</Border>
 
 	</Grid>

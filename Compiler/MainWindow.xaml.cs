@@ -21,16 +21,52 @@ namespace Compiler
     /// </summary>
     public partial class MainWindow : Window
     {
+        const string DEFAULT_INPUT_TEXT = "Your Java code here...";
+
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            this.SetHandlers();
         }
 
-        public void OnCompileButtonClicked(object sender, RoutedEventArgs e)
+        private void SetHandlers()
+        {
+            this.InputBox.GotKeyboardFocus += this.OnInputBoxGotFocused;
+            this.InputBox.LostKeyboardFocus += this.OnInputBoxLostFocused;
+            this.OutputBlock.MouseDown += this.RemoveKeyboard;
+            this.CompileButton.MouseDown += this.RemoveKeyboard;
+        }
+
+        private void OnCompileButtonClicked(object sender, RoutedEventArgs e)
         {
             _ = FileHelper.WriteFile(this.InputBox.Text, "CeciEstUnTest.txt");
-            string output = String.Join("\n", FileHelper.RunExe());
+            string output = String.Join("\n", FileHelper.RunExe("a.exe", "CeciEstUnTest.txt"));
             this.OutputBlock.Text = output;
+        }
+
+        private void OnInputBoxGotFocused(object sender, RoutedEventArgs e)
+        {
+            if (this.InputBox.Text == DEFAULT_INPUT_TEXT && this.InputBox.Foreground == Brushes.DarkGray)
+            {
+                this.InputBox.FontStyle = FontStyles.Normal;
+                this.InputBox.Text = string.Empty;
+                this.InputBox.Foreground = Brushes.Black;
+            }
+        }
+
+        private void OnInputBoxLostFocused(object sender, RoutedEventArgs e)
+        {
+            if (this.InputBox.Text.Trim().Equals(string.Empty))
+            {
+                this.InputBox.FontStyle = FontStyles.Italic;
+                this.InputBox.Text = DEFAULT_INPUT_TEXT;
+                this.InputBox.Foreground = Brushes.DarkGray;
+            }
+        }
+
+        private void RemoveKeyboard(object sender, RoutedEventArgs e)
+        {
+            Keyboard.ClearFocus();
         }
     }
 }

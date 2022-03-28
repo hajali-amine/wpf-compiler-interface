@@ -9,19 +9,19 @@ namespace Compiler.Helpers
 {
     public static class FileHelper
     {
-        public static async Task WriteFile(string text, string FileName)
+        public static async Task WriteFile(string text, string fileName)
         {
-            await File.WriteAllTextAsync(FileName, text);
+            await File.WriteAllTextAsync(fileName, text);
         }
 
-        public static List<string> RunExe()
+        public static List<string> RunExe(string exe, string file)
         {
             var proc = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "a.exe",
-                    Arguments = "CeciEstUnTest.txt",
+                    FileName = exe,
+                    Arguments = file,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true
@@ -35,6 +35,10 @@ namespace Compiler.Helpers
             {
                 result.Add(proc.StandardOutput.ReadLine());
             }
+            //while (!proc.StandardError.EndOfStream)
+            //{
+
+            //}
 
             return result;
         }
