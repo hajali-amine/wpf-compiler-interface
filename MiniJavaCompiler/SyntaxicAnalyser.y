@@ -35,8 +35,6 @@ int yylex(void);
 %token INF
 %token SUP
 %token NOT
-%token COMMENT_LINE
-%token COMMENT_BLOCK
 %token CLASS
 %token STATIC
 %token EXTENDS
@@ -64,6 +62,7 @@ int yylex(void);
 
 %%
 programme 				: MainClass  ClassDeclaration
+                        | MainClass
 						| MainClass  ClassDeclaration error  {yyerror ("Detection des declaration invalid"); }	
 						;
 MainClass               : CLASS ID BLOCK_START PUBLIC STATIC VOID MAIN P_OUVRANTE STR C_OUVRANTE C_FERMANTE ID P_FERMANTE BLOCK_START Statement BLOCK_END BLOCK_END

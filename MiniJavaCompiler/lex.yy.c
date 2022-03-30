@@ -298,13 +298,13 @@ static yyconst short int yy_acclist[190] =
        50,   46,   50,   46,   50,   46,   50,   46,   50,   46,
        50,   46,   50,   46,   50,   46,   50,   46,   50,   46,
        50,    7,   50,   50,    8,   50,    1,   14,   48,   45,
-       46,   21,   12,   47,   26,   49,   12,   49,   15,   46,
+       46,   21,   12,   47,   27,   49,   12,   49,   15,   46,
        46,    2,   46,   46,   46,   46,   34,   46,   46,   46,
 
        46,   46,   46,   46,   46,   46,   46,   46,   46,   46,
        22,   47,   47,   46,   46,   46,   46,   46,   46,   46,
        46,   38,   46,   46,   46,   46,   46,   46,   46,   46,
-       46,   46,   27,   46,   46,   46,   35,   46,   46,   46,
+       46,   46,   26,   46,   46,   46,   35,   46,   46,   46,
        46,   42,   46,   46,   46,   46,   46,   46,   37,   46,
        13,   46,   41,   46,   46,   46,   46,   28,   46,   46,
        46,   46,   46,   46,   46,   46,   36,   46,   44,   46,
@@ -875,127 +875,127 @@ return(NOT);
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 71 "LexicalAnalyser.l"
-return(COMMENT_LINE);
+#line 70 "LexicalAnalyser.l"
+{fprintf("block_comment_on_line :%d",yylineno);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 72 "LexicalAnalyser.l"
-return(COMMENT_BLOCK);
+#line 71 "LexicalAnalyser.l"
+{fprintf("block_line_on_line :%d",yylineno);}	
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 75 "LexicalAnalyser.l"
+#line 73 "LexicalAnalyser.l"
 return(CLASS);
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 76 "LexicalAnalyser.l"
+#line 74 "LexicalAnalyser.l"
 return(STATIC);
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 77 "LexicalAnalyser.l"
+#line 75 "LexicalAnalyser.l"
 return(EXTENDS);
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 78 "LexicalAnalyser.l"
+#line 76 "LexicalAnalyser.l"
 return(PRIVATE);
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 79 "LexicalAnalyser.l"
+#line 77 "LexicalAnalyser.l"
 return(PUBLIC);
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 80 "LexicalAnalyser.l"
+#line 78 "LexicalAnalyser.l"
 return(PACKAGE);
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 81 "LexicalAnalyser.l"
+#line 79 "LexicalAnalyser.l"
 return(IF);
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 82 "LexicalAnalyser.l"
+#line 80 "LexicalAnalyser.l"
 return(ELSE);
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 83 "LexicalAnalyser.l"
+#line 81 "LexicalAnalyser.l"
 return(WHILE);
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 84 "LexicalAnalyser.l"
+#line 82 "LexicalAnalyser.l"
 return(THIS);
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 85 "LexicalAnalyser.l"
+#line 83 "LexicalAnalyser.l"
 return(NEW);
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 86 "LexicalAnalyser.l"
+#line 84 "LexicalAnalyser.l"
 return(RETURN);
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 87 "LexicalAnalyser.l"
+#line 85 "LexicalAnalyser.l"
 return(LENGTH);
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 88 "LexicalAnalyser.l"
+#line 86 "LexicalAnalyser.l"
 return(VOID);
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 89 "LexicalAnalyser.l"
+#line 87 "LexicalAnalyser.l"
 return(MAIN);
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 90 "LexicalAnalyser.l"
+#line 88 "LexicalAnalyser.l"
 return(SYSTEM_OUT_PRINTLN);
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 91 "LexicalAnalyser.l"
+#line 89 "LexicalAnalyser.l"
 return(STR);
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 92 "LexicalAnalyser.l"
+#line 90 "LexicalAnalyser.l"
 return(STRING);
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 93 "LexicalAnalyser.l"
+#line 91 "LexicalAnalyser.l"
 return(ID);
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 95 "LexicalAnalyser.l"
+#line 93 "LexicalAnalyser.l"
 {fprintf(stderr,"block_comment_not_closed_on_line :%d",yylineno);}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 96 "LexicalAnalyser.l"
+#line 94 "LexicalAnalyser.l"
 {fprintf(stderr,"block_string_not_closed_on_line :%d",yylineno);}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 98 "LexicalAnalyser.l"
+#line 96 "LexicalAnalyser.l"
 {printf("illegal_identifier \'%s\' on line :%d",yytext,yylineno);}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 101 "LexicalAnalyser.l"
+#line 99 "LexicalAnalyser.l"
 ECHO;
 	YY_BREAK
 #line 1002 "lex.yy.c"
@@ -1882,7 +1882,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 101 "LexicalAnalyser.l"
+#line 99 "LexicalAnalyser.l"
 
 
 int yywrap(void)

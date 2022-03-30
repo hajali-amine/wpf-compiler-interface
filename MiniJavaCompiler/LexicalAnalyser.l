@@ -67,10 +67,8 @@ iderrone    {chiffre}({lettre}|{chiffre}|_|$)*
 "<"                                                                                  return(INF);
 ">"                                                                                  return(SUP);
 "!"                                                                                  return(NOT);
-
-{COMMENT_LINE}         								                                 return(COMMENT_LINE);
-{COMMENT_BLOCK}                                                                      return(COMMENT_BLOCK);
-
+{COMMENT_BLOCK}								  										 {fprintf("block_comment_on_line :%d",yylineno);}
+{COMMENT_LINE}								  										 {fprintf("block_line_on_line :%d",yylineno);}	
 
 "class"                                                                              return(CLASS);
 "static"                                                                             return(STATIC);
