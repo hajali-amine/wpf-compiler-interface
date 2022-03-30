@@ -18,20 +18,23 @@
         </Grid.ColumnDefinitions>
 
         <!--Text block to show output-->
-        <TextBlock Name="OutputBlock"
-                   Margin="10"
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="10"
+                      Grid.RowSpan="2"
+                      Grid.Column="1"
+				      Grid.Row="0">
+            <TextBlock Name="OutputBlock"
                    Padding="10"
-                   Grid.RowSpan="2"
-                   Grid.Column="1"
-				   Grid.Row="0"
 				   HorizontalAlignment="Stretch"
 				   VerticalAlignment="Stretch"
 				   Text="The output"
 				   TextWrapping="Wrap" 
-				   Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" 
+				   Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
 				   FontFamily="Verdana" 
 				   FontWeight="Normal" 
 				   FontStyle="Normal"/>
+        </ScrollViewer>
 
         <!--Button to compile with-->
         <Grid Grid.Column="1" 
@@ -55,8 +58,10 @@
         </Grid>
 
         <!--Text box to write the Java code-->
-
         <TextBox Name="InputBox"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.CanContentScroll="True"
                      Margin="10"
                      Grid.Row="0"
 					 Grid.RowSpan="3"

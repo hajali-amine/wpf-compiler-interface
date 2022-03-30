@@ -46,7 +46,7 @@ namespace Compiler
             else
             {
                 _ = FileHelper.WriteFile(text: this.InputBox.Text, fileName: "CeciEstUnTest.txt");
-                (bool isErrored, List<string> output) result = FileHelper.RunExe(exe: "a.exe", file: "CeciEstUnTest.txt");
+                (bool isErrored, List<string> output) result = FileHelper.RunExe(exe: "stderr.exe", file: "CeciEstUnTest.txt");
                 string output = string.Join("\n", result.output);
                 this.OutputBlock.Text = output;
                 this.OutputBlock.Foreground = result.isErrored ? Brushes.Red : Brushes.Black;
