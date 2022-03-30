@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Compiler.Helpers
 {
@@ -26,15 +22,13 @@ namespace Compiler.Helpers
 
             _ = proc.Start();
             proc.StandardInput.AutoFlush = true;
-
             proc.StandardInput.WriteLine(content);
-
             proc.StandardInput.Close();
 
-            bool isErrored = proc.StandardError.Peek() != -1;
-            TextReader stream = isErrored ? proc.StandardError : proc.StandardOutput;
+            bool isError = proc.StandardError.Peek() != -1;
+            TextReader stream = isError ? proc.StandardError : proc.StandardOutput;
 
-            return (isErrored, stream.ReadToEnd());
+            return (isError, stream.ReadToEnd());
         }
     }
 }
