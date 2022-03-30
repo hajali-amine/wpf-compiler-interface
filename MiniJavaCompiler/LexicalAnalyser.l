@@ -68,7 +68,7 @@ iderrone    {chiffre}({lettre}|{chiffre}|_|$)*
 ">"                                                                                  return(SUP);
 "!"                                                                                  return(NOT);
 
-{COMMENT_LINE}         								                         return(COMMENT_LINE);
+{COMMENT_LINE}         								                                 return(COMMENT_LINE);
 {COMMENT_BLOCK}                                                                      return(COMMENT_BLOCK);
 
 

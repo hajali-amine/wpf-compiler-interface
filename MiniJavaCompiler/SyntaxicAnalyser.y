@@ -76,8 +76,13 @@ MainClass               : CLASS ID BLOCK_START PUBLIC STATIC VOID MAIN P_OUVRANT
                         | CLASS ID BLOCK_START PUBLIC STATIC VOID MAIN P_OUVRANTE STR C_OUVRANTE C_FERMANTE ID P_FERMANTE BLOCK_START Statement error BLOCK_END {yyerror (" invalid declaration : '}' expected but not found"); }
                         | CLASS error BLOCK_START PUBLIC STATIC VOID MAIN P_OUVRANTE STR C_OUVRANTE C_FERMANTE ID P_FERMANTE BLOCK_START Statement BLOCK_END error {yyerror (" invalid declaration :'}' expected but not found"); }
                         ;
+
 ClassDeclaration        : CLASS ID EXTENDS ID BLOCK_START VarDeclarations MethodDeclarations BLOCK_END
+                        | CLASS ID EXTENDS ID BLOCK_START VarDeclarations BLOCK_END
+                        | CLASS ID EXTENDS ID BLOCK_START MethodDeclarations BLOCK_END
                         | CLASS ID BLOCK_START VarDeclarations MethodDeclarations BLOCK_END
+                        | CLASS ID BLOCK_START MethodDeclarations BLOCK_END
+                        | CLASS ID BLOCK_START VarDeclarations BLOCK_END
                         | CLASS ID error VarDeclarations MethodDeclarations BLOCK_END {yyerror ("declaration invalid : '{' expect but not found"); }
                         | CLASS ID BLOCK_START VarDeclarations MethodDeclarations error {yyerror ("declaration invalid : '}' expect but not found"); }
                         | error ID BLOCK_START VarDeclarations MethodDeclarations BLOCK_END {yyerror ("declaration invalid : keyword class not found "); }
