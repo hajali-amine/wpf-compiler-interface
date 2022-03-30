@@ -1,3 +1,5 @@
 .vs
-Compiler/bin
 Compiler/obj
+Compiler/Output/*
+!Compiler/Output/stderr.exe
+!Compiler/Output/stdout.exe

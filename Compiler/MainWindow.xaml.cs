@@ -39,9 +39,18 @@ namespace Compiler
 
         private void OnCompileButtonClicked(object sender, RoutedEventArgs e)
         {
-            _ = FileHelper.WriteFile(this.InputBox.Text, "CeciEstUnTest.txt");
-            string output = String.Join("\n", FileHelper.RunExe("a.exe", "CeciEstUnTest.txt"));
-            this.OutputBlock.Text = output;
+            if (this.InputBox.Foreground == Brushes.DarkGray)
+            {
+                this.OutputBlock.Text = "There is no code";
+            }
+            else
+            {
+                _ = FileHelper.WriteFile(text: this.InputBox.Text, fileName: "CeciEstUnTest.txt");
+                (bool isErrored, List<string> output) result = FileHelper.RunExe(exe: "a.exe", file: "CeciEstUnTest.txt");
+                string output = string.Join("\n", result.output);
+                this.OutputBlock.Text = output;
+                this.OutputBlock.Foreground = result.isErrored ? Brushes.Red : Brushes.Black;
+            }
         }
 
         private void OnInputBoxGotFocused(object sender, RoutedEventArgs e)

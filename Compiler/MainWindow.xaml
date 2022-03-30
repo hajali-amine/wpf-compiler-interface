@@ -6,36 +6,36 @@
         xmlns:local="clr-namespace:Compiler"
         mc:Ignorable="d"
         Title="Mini Java Compiler" Height="450" Width="800">
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="*" />
-		</Grid.ColumnDefinitions>
-		
-		<!--Text block to show output-->
-		<Border BorderThickness="1"
-				BorderBrush="Black"
-				Grid.Column="1"
-				Grid.Row="0" >
-            <TextBlock Name="OutputBlock"
-                        Padding="10"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch"
-						Text="The output"
-						TextWrapping="Wrap" 
-						Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" 
-						FontFamily="Verdana" 
-						FontWeight="Normal" 
-						FontStyle="Normal"/>
-        </Border>
-		
-		<!--Button to compile with-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--Text block to show output-->
+        <TextBlock Name="OutputBlock"
+                   Margin="10"
+                   Padding="10"
+                   Grid.RowSpan="2"
+                   Grid.Column="1"
+				   Grid.Row="0"
+				   HorizontalAlignment="Stretch"
+				   VerticalAlignment="Stretch"
+				   Text="The output"
+				   TextWrapping="Wrap" 
+				   Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" 
+				   FontFamily="Verdana" 
+				   FontWeight="Normal" 
+				   FontStyle="Normal"/>
+
+        <!--Button to compile with-->
         <Grid Grid.Column="1" 
-              Grid.Row="1"
+              Grid.Row="2"
               Name="ButtonGrid"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch">
@@ -45,16 +45,22 @@
 				HorizontalAlignment="Center" 
 				Height="50" 
 				Width="150"
-				Click="OnCompileButtonClicked"/>
+				Click="OnCompileButtonClicked">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
         </Grid>
-		
-		<!--Text box to write the Java code-->
-		<Border BorderThickness="1" 
-				BorderBrush="Black" 
-				Grid.Row="0"
-				Grid.RowSpan="2"
-				Grid.Column="0" >
-			<TextBox Name="InputBox"
+
+        <!--Text box to write the Java code-->
+
+        <TextBox Name="InputBox"
+                     Margin="10"
+                     Grid.Row="0"
+					 Grid.RowSpan="3"
+					 Grid.Column="0"
                      Padding="10"
 					 HorizontalAlignment="Stretch" 
 					 VerticalAlignment="Stretch"
@@ -68,8 +74,7 @@
                      Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" 
                      Foreground="DarkGray"
                      Text="Your Java code here..."/>
-			</Border>
 
-	</Grid>
+    </Grid>
 </Window>
 

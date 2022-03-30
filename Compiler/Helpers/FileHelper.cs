@@ -11,10 +11,10 @@ namespace Compiler.Helpers
     {
         public static async Task WriteFile(string text, string fileName)
         {
-            await File.WriteAllTextAsync(fileName, text);
+            await File.WriteAllTextAsync(path: fileName, contents: text);
         }
 
-        public static List<string> RunExe(string exe, string file)
+        public static (bool, List<string>) RunExe(string exe, string file)
         {
             var proc = new Process
             {
@@ -24,23 +24,23 @@ namespace Compiler.Helpers
                     Arguments = file,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
+                    RedirectStandardError = true
                 }
             };
 
             List<string> result = new List<string>();
 
             proc.Start();
-            while (!proc.StandardOutput.EndOfStream)
+
+            bool isErrored = proc.StandardError.Peek() != -1;
+            var stream = isErrored ? proc.StandardError : proc.StandardOutput;
+            while (!stream.EndOfStream)
             {
-                result.Add(proc.StandardOutput.ReadLine());
+                result.Add(stream.ReadLine());
             }
-            //while (!proc.StandardError.EndOfStream)
-            //{
 
-            //}
-
-            return result;
+            return (isErrored, result);
         }
     }
 }
