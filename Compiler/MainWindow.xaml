@@ -28,12 +28,13 @@
                    Padding="10"
 				   HorizontalAlignment="Stretch"
 				   VerticalAlignment="Stretch"
-				   Text="The output"
 				   TextWrapping="Wrap" 
 				   Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
 				   FontFamily="Verdana" 
 				   FontWeight="Normal" 
-				   FontStyle="Normal"/>
+				   FontStyle="Normal"
+                   Text="There is no code"
+                   Foreground="DarkGray"/>
         </ScrollViewer>
 
         <!--Button to compile with-->
