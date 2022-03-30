@@ -11,3 +11,7 @@ Plus, we provided a small Desktop app using .NET's WPF where you can write your 
 In the _MiniJavaCompiler_ directory, you will find a ``.bat`` file that generates and executable - which is our parser.
 
 That parser is used by the Desktop app to run the parsing process  while showing the output of that executable.
+
+<p align="center">
+  <img src="assets/demo.gif" alt="animated" />
+</p>
