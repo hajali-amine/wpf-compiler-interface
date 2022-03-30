@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Compiler"
+        xmlns:local="clr-namespace:Compiler" xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
         Title="Mini Java Compiler" Height="450" Width="800">
     <Grid>
@@ -59,28 +59,26 @@
         </Grid>
 
         <!--Text box to write the Java code-->
-        <TextBox Name="InputBox"
-                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                     ScrollViewer.CanContentScroll="True"
-                     Margin="10"
-                     Grid.Row="0"
-					 Grid.RowSpan="3"
-					 Grid.Column="0"
-                     Padding="10"
-					 HorizontalAlignment="Stretch" 
-					 VerticalAlignment="Stretch"
-					 AcceptsReturn="True" 
-					 AcceptsTab="True" 
-					 TextWrapping="Wrap"
-					 FontSize="12" 
-					 FontFamily="Roboto" 
-                     FontStyle="Italic" 
-                     FontWeight="Normal" 
-                     Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" 
-                     Foreground="DarkGray"
-                     Text="Your Java code here..."/>
-
+        <avalon:TextEditor Name="InputBox"
+                            ShowLineNumbers="True" 
+                            SyntaxHighlighting="Java"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            ScrollViewer.CanContentScroll="True"
+                            Margin="10"
+                            Grid.Row="0"
+		                    Grid.RowSpan="3"
+		                    Grid.Column="0"
+                            Padding="10"
+		                    HorizontalAlignment="Stretch" 
+		                    VerticalAlignment="Stretch"
+                            WordWrap="True"
+                           FontSize="12" 
+					        FontFamily="Roboto" 
+                            FontStyle="Italic" 
+                            FontWeight="Normal" 
+                            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" 
+                            Foreground="DarkGray"
+                           Text="Your Java code here..."/>
     </Grid>
 </Window>
 

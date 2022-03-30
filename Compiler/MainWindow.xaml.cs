@@ -37,6 +37,7 @@ namespace Compiler
             this.CompileButton.MouseDown += this.RemoveKeyboard;
         }
 
+
         private void OnCompileButtonClicked(object sender, RoutedEventArgs e)
         {
             if (this.InputBox.Foreground == Brushes.DarkGray)
