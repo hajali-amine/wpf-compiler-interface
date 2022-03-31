@@ -76,7 +76,7 @@
 
         <!--Text box to write the Java code-->
         <avalon:TextEditor Name="InputBox"
-                            ShowLineNumbers="True" 
+                            ShowLineNumbers="False" 
                             SyntaxHighlighting="Java"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             ScrollViewer.CanContentScroll="True"

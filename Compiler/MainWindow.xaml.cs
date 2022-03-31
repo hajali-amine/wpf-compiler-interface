@@ -51,7 +51,7 @@ namespace Compiler
         private void Compile()
         {
             (bool isError, string output) = ExeRunnerHelper.RunExe(exe: "parser.exe", content: this.InputBox.Text);
-            this.OutputBlock.Text = output;
+            this.OutputBlock.Text = output.Equals(string.Empty) ? "Code compiled successfully!" : output;
             this.OutputBlock.Foreground = isError ? Brushes.Red : Brushes.Black;
         }
 
@@ -66,6 +66,7 @@ namespace Compiler
         {
             if (this.InputBox.Text == DEFAULT_INPUT_TEXT && this.InputBox.Foreground == Brushes.DarkGray)
             {
+                this.InputBox.ShowLineNumbers = true;
                 this.InputBox.FontStyle = FontStyles.Normal;
                 this.InputBox.Text = string.Empty;
                 this.InputBox.Foreground = Brushes.Black;
@@ -76,6 +77,7 @@ namespace Compiler
         {
             if (this.InputBox.Text.Trim().Equals(string.Empty))
             {
+                this.InputBox.ShowLineNumbers = false;
                 this.InputBox.FontStyle = FontStyles.Italic;
                 this.InputBox.Text = DEFAULT_INPUT_TEXT;
                 this.InputBox.Foreground = Brushes.DarkGray;
