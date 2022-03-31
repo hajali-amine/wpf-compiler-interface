@@ -1,18 +1,7 @@
 ﻿using Compiler.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Compiler
 {
@@ -37,6 +26,7 @@ namespace Compiler
             this.CompileButton.MouseDown += this.RemoveKeyboard;
         }
 
+
         private void OnCompileButtonClicked(object sender, RoutedEventArgs e)
         {
             if (this.InputBox.Foreground == Brushes.DarkGray)
@@ -46,9 +36,9 @@ namespace Compiler
             }
             else
             {
-                (bool isErrored, string output) result = ExeRunnerHelper.RunExe(exe: "parser.exe", content: this.InputBox.Text);
+                (bool isError, string output) result = ExeRunnerHelper.RunExe(exe: "parser.exe", content: this.InputBox.Text);
                 this.OutputBlock.Text = result.output;
-                this.OutputBlock.Foreground = result.isErrored ? Brushes.Red : Brushes.Black;
+                this.OutputBlock.Foreground = result.isError ? Brushes.Red : Brushes.Black;
             }
         }
 
