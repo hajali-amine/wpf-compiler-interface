@@ -43,24 +43,40 @@
               Name="ButtonGrid"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch">
-            <Button Name="CompileButton"
+            <StackPanel  Orientation="Horizontal" 
+                         VerticalAlignment="Center" 
+                         HorizontalAlignment="Center" >
+
+                <Button Name="CompileButton"
 				Content="Compile"
-				VerticalAlignment="Center" 
-				HorizontalAlignment="Center" 
+                Margin="10"
 				Height="50" 
 				Width="150"
 				Click="OnCompileButtonClicked">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="5"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Name="TokenizerButton"
+				Content="Tokens"
+                Margin="10"
+				Height="50" 
+				Width="150"
+				Click="OnCompileButtonClicked">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
         </Grid>
 
         <!--Text box to write the Java code-->
         <avalon:TextEditor Name="InputBox"
-                            ShowLineNumbers="True" 
+                            ShowLineNumbers="False" 
                             SyntaxHighlighting="Java"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             ScrollViewer.CanContentScroll="True"
