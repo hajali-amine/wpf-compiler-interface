@@ -31,7 +31,7 @@ COMMENT_START        \/\*
 COMMENT_END         \*\/
 COMMENT_BLOCK       {COMMENT_START}(.|\n)*{COMMENT_END}
 string     \"[^\"]*\"
-type      (int|int\[\]|boolean|boolean\[\]|String|String\[\])
+type      (int|int\[\]|boolean|boolean\[\])
 COMMENT_BLOCK_ERROR   \/\*([^(\*\/)]|\n)*
 STRING_BLOCK_ERROR    \"([^(\")])*
 iderrone    {chiffre}({lettre}|{chiffre}|_|$)*
@@ -87,8 +87,9 @@ iderrone    {chiffre}({lettre}|{chiffre}|_|$)*
 "main"                                                                               {printf(" keyword_main "); return(MAIN);}
 "System.out.println"                                                                 {printf(" keyword_sysoutprint "); return(SYSTEM_OUT_PRINTLN);}
 "String"                                                                             {printf(" keyword_str "); return(STR);}
+{type}					{printf(" string "); return(TYPE);}
 {string}                                                                             {printf(" string "); return(STRING);}
-{id}                                                                                 {printf(" id "); return(ID);}
+{id}                                                                                	 {printf(" id "); return(ID);}
 
 {COMMENT_BLOCK_ERROR}                   {fprintf(stderr,"block_comment_not_closed_on_line :%d",yylineno);}
 {STRING_BLOCK_ERROR}                    {fprintf(stderr,"block_string_not_closed_on_line :%d",yylineno);}

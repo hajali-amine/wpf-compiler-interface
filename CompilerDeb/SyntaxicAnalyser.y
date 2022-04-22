@@ -54,6 +54,7 @@ int yylex(void);
 %token ID
 %token STRING
 %token STR
+%token TYPE
 
 
 
@@ -101,6 +102,8 @@ VarDeclaration          : type ID POINT_VIRGULE
 
 MethodDeclaration       : PUBLIC type ID P_OUVRANTE P_FERMANTE BLOCK_START VarDeclarations Statements RETURN expression POINT_VIRGULE BLOCK_END
                         | PUBLIC type ID P_OUVRANTE argDeclarations P_FERMANTE BLOCK_START VarDeclarations Statements RETURN expression POINT_VIRGULE BLOCK_END
+                        | PUBLIC type ID P_OUVRANTE P_FERMANTE BLOCK_START Statements RETURN expression POINT_VIRGULE BLOCK_END
+                        | PUBLIC type ID P_OUVRANTE argDeclarations P_FERMANTE BLOCK_START Statements RETURN expression POINT_VIRGULE BLOCK_END
                         ;
 
 Statements              : Statement Statements
@@ -117,6 +120,7 @@ argDeclaration          : type ID
 type                    : INTEGER_LITERAL
                         | BOOLEAN_LITERAL
                         | INTEGER_LITERAL C_FERMANTE C_FERMANTE
+                        | TYPE
                         | ID
                         ;
 
@@ -152,6 +156,8 @@ expression              : expression ET expression
 expressions             : expression VIRGULE expressions
                         | expression 
                         ;                        
+
+                     
 
 
 %% 

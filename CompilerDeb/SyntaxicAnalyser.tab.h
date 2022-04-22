@@ -81,7 +81,8 @@
      SYSTEM_OUT_PRINTLN = 297,
      ID = 298,
      STRING = 299,
-     STR = 300
+     STR = 300,
+     TYPE = 301
    };
 #endif
 
