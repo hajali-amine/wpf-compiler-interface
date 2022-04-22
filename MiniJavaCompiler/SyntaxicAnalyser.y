@@ -1,13 +1,16 @@
 %{
-
+#include "semantic.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 extern int yylineno;
+char nom[256];
 
 int yyerror(char const * msg);	
 int yylex(void);
+void Begin();
+void End();
 
 %}
 %error-verbose
@@ -54,7 +57,9 @@ int yylex(void);
 %token ID
 %token STRING
 %token STR
-
+%token TYPE
+%token INT
+%token BOOL
 
 
 
@@ -62,8 +67,8 @@ int yylex(void);
 
 %%
 
-programme 				: MainClass  ClassDeclaration
-                        | MainClass
+programme 				: MainClass  ClassDeclaration {checkIdDeclaredIsUsed();}
+                        | MainClass {checkIdDeclaredIsUsed();}
 						| MainClass  ClassDeclaration error  {yyerror ("Detection des declaration invalid"); }	
 						;
 MainClass               : CLASS ID BLOCK_START PUBLIC STATIC VOID MAIN P_OUVRANTE STR C_OUVRANTE C_FERMANTE ID P_FERMANTE BLOCK_START Statement BLOCK_END BLOCK_END
@@ -92,24 +97,44 @@ VarDeclarations         : VarDeclaration VarDeclarations
 MethodDeclarations      : MethodDeclaration MethodDeclarations
                         | MethodDeclaration
                         ;
-VarDeclaration          : type ID POINT_VIRGULE
+VarDeclaration          : type ID {checkIdExisted(nom);} POINT_VIRGULE
                         | type ID error {yyerror ("declaration invalid : ';' expect but not found"); }
                         ;
-MethodDeclaration       : PUBLIC type ID P_OUVRANTE P_FERMANTE BLOCK_START VarDeclarations Statements RETURN expression POINT_VIRGULE BLOCK_END
-                        | PUBLIC type ID P_OUVRANTE argDeclarations P_FERMANTE BLOCK_START VarDeclarations Statements RETURN expression POINT_VIRGULE BLOCK_END
+
+afterIdMethodeCode      :{
+                            if( chercher(nom, table) ){
+                                yyerror("The procedure is Already defined");
+                            }else{
+                                NODE g_noeudMethod = create(nom, NODE_TYPE_UNKNOWN, procedure, NULL);
+                                table = insert(g_noeudMethod, table);
+                            }
+                            g_IfProcParameters = 1;
+                        }
+                        ;
+afterParentheseFermanteMethodeCode :{ g_IfProc = 1; 
+						    g_noeudProc->nbParam = g_nbParam;
+                            g_nbParam = 0;
+						}
+                        ;
+MethodDeclaration       : PUBLIC type ID afterIdMethodeCode P_OUVRANTE P_FERMANTE afterParentheseFermanteMethodeCode BLOCK_START VarDeclarations Statements RETURN expression POINT_VIRGULE BLOCK_END{checkIdDeclaredIsUsed();}
+						| PUBLIC type ID afterIdMethodeCode P_OUVRANTE argDeclarations P_FERMANTE afterParentheseFermanteMethodeCode BLOCK_START VarDeclarations Statements RETURN expression POINT_VIRGULE BLOCK_END{checkIdDeclaredIsUsed();}
+                        | PUBLIC type ID afterIdMethodeCode P_OUVRANTE P_FERMANTE afterParentheseFermanteMethodeCode BLOCK_START Statements RETURN expression POINT_VIRGULE BLOCK_END{checkIdDeclaredIsUsed();}
+                        | PUBLIC type ID afterIdMethodeCode P_OUVRANTE argDeclarations P_FERMANTE afterParentheseFermanteMethodeCode BLOCK_START Statements RETURN expression POINT_VIRGULE BLOCK_END{checkIdDeclaredIsUsed();}
                         ;
 Statements              : Statement Statements
                         | Statement
                         ;
-argDeclarations         : argDeclaration VIRGULE argDeclarations
+argDeclarations         : argDeclaration {g_nbParam++;} VIRGULE argDeclarations
                         | argDeclaration
                         ;
-argDeclaration          : type ID 
+argDeclaration          : type ID {checkIdExisted(nom);
+                            } 
                         ;
-type                    : INTEGER_LITERAL
-                        | BOOLEAN_LITERAL
-                        | INTEGER_LITERAL C_FERMANTE C_FERMANTE
-                        | ID
+type                    : INT { g_type = tInt; }
+                        | BOOL { g_type = tBool; }
+                        | INT C_FERMANTE C_FERMANTE
+                        | TYPE
+                        | ID 
                         ;
 Statement               : BLOCK_START Statements BLOCK_END
                         | IF P_OUVRANTE expression P_FERMANTE Statement ELSE Statement
@@ -118,38 +143,43 @@ Statement               : BLOCK_START Statements BLOCK_END
                         | ID AFFECTATION expression POINT_VIRGULE
                         | ID C_OUVRANTE expression C_FERMANTE AFFECTATION expression POINT_VIRGULE
                         ;  
-expression              : INTEGER_LITERAL expressionComp
-                        | BOOLEAN_LITERAL expressionComp
-                        | ID expressionComp
-                        | THIS expressionComp
-                        | NEW INTEGER_LITERAL C_OUVRANTE expression C_FERMANTE expressionComp
-                        | NEW ID P_OUVRANTE P_FERMANTE expressionComp
-                        | NOT expression expressionComp
-                        | P_OUVRANTE expression P_FERMANTE expressionComp
-                        | STRING expressionComp
+
+expression              : expression ET expression
+                        | expression OR expression
+                        | expression SUP expression
+                        | expression INF expression
+                        | expression ADD expression
+                        | expression SUBSTRACTION expression
+                        | expression MULTIPLICATION expression
+                        | expression C_OUVRANTE expression C_FERMANTE
+                        | expression POINT LENGTH
+                        | expression POINT ID P_OUVRANTE expressions P_FERMANTE
+                        | INTEGER_LITERAL
+                        | BOOLEAN_LITERAL
+                        | ID { checkIdDeclared (nom);}
+                        | THIS
+                        | NEW INTEGER_LITERAL C_OUVRANTE expression C_FERMANTE
+                        | NEW ID { checkIdDeclared (nom);} P_OUVRANTE P_FERMANTE
+                        | NOT expression
+                        | P_OUVRANTE expression P_FERMANTE
+                        | STRING
                         ;
-expressionComp          : ET expression expressionComp
-					    | OR expression expressionComp
-						| SUP expression expressionComp
-						| INF expression expressionComp
-						| ADD expression expressionComp
-						| SUBSTRACTION expression expressionComp
-						| MULTIPLICATION expression expressionComp
-						| C_OUVRANTE expression C_FERMANTE expression expressionComp
-						| POINT LENGTH expression expressionComp
-						| POINT ID P_OUVRANTE expressions P_FERMANTE expression expressionComp
-						|
-						;
-expressions             : expression VIRGULE expressions
-                        | expression 
+
+expressions             : expression {
+							g_nbParam ++;
+						}VIRGULE expressions
+                        | expression {
+							g_nbParam ++;
+						}
                         ;                        
+
+                      
 %% 
 
 
 
 int yyerror(char const *msg) {
        
-	
 	fprintf(stderr, "%s %d\n", msg,yylineno);
 	return 0;
 	
@@ -158,9 +188,42 @@ int yyerror(char const *msg) {
 
 extern FILE *yyin;
 
+void Begin()
+{
+	//initialisations
+    //contient tous les variables : table de symboles
+	table = NULL;
+
+    //contient les variables locale : scope methode
+	table_local = NULL;
+
+	g_type = NODE_TYPE_UNKNOWN;
+    // nombre de parametres de la methode
+	g_nbParam = 0;
+    
+    //il s'agit d'une methode
+	g_IfProc = 0 ;
+    
+    // la methode a des arguments
+    g_IfProcParameters = 0 ;
+    
+}
+
+void End()
+{
+	destructSymbolsTable(table);
+}
+
+
 int main()
 {
- yyparse();
- 
- 
+	Begin();
+	yyparse();
+	End();
+    return 1;
+}
+
+int yywrap()
+{
+	return(1);
 }

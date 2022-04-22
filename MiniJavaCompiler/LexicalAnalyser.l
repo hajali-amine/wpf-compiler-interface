@@ -31,7 +31,7 @@ COMMENT_START        \/\*
 COMMENT_END         \*\/
 COMMENT_BLOCK       {COMMENT_START}(.|\n)*{COMMENT_END}
 string     \"[^\"]*\"
-type      (int|int\[\]|boolean|boolean\[\]|String|String\[\])
+type      (int|int\[\]|boolean|boolean\[\])
 COMMENT_BLOCK_ERROR   \/\*([^(\*\/)]|\n)*
 STRING_BLOCK_ERROR    \"([^(\")])*
 iderrone    {chiffre}({lettre}|{chiffre}|_|$)*
@@ -67,8 +67,8 @@ iderrone    {chiffre}({lettre}|{chiffre}|_|$)*
 "<"                                                                                  return(INF);
 ">"                                                                                  return(SUP);
 "!"                                                                                  return(NOT);
-{COMMENT_BLOCK}								  										 {fprintf("block_comment_on_line :%d",yylineno);}
-{COMMENT_LINE}								  										 {fprintf("block_line_on_line :%d",yylineno);}	
+{COMMENT_BLOCK}								  										 {printf("block_comment_on_line :%d",yylineno);}
+{COMMENT_LINE}								  										 {printf("block_line_on_line :%d",yylineno);}	
 
 "class"                                                                              return(CLASS);
 "static"                                                                             return(STATIC);
@@ -87,6 +87,9 @@ iderrone    {chiffre}({lettre}|{chiffre}|_|$)*
 "main"                                                                               return(MAIN);
 "System.out.println"                                                                 return(SYSTEM_OUT_PRINTLN);
 "String"                                                                             return(STR);
+"int"                                                                                return(INT);
+"boolean"                                                                            return(BOOL);
+{type}																				 return(TYPE);
 {string}                                                                             return(STRING);
 {id}                                                                                 return(ID);
 
@@ -97,8 +100,3 @@ iderrone    {chiffre}({lettre}|{chiffre}|_|$)*
 
 
 %%
-
-int yywrap(void)
-{
-	return(1);
-}
