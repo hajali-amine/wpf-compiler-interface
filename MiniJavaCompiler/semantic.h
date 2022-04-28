@@ -35,10 +35,10 @@ NODE chercher (const char* name, TABLE_NODE table);
 
 void checkIdExisted (char* name);
 void checkProcedureArgs (char* name);
-int checkIdDeclared (char* name);
+int  checkIdDeclared (char* name);
 void checkIdInitialised (char* name);
 void checkIdDeclaredIsUsed();
-char* concat(const char* s1, char* s2);
-int print_error(char* msg);
+char*concat(const char* s1, char* s2);
+int  print_error(char* msg);
 // contrainted added 
 
