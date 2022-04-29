@@ -1,18 +1,70 @@
-
-class Factorial{
+/// test 1 variable undeclared 
+class MainClass{ 
     public static void main(String[] a){
-        System.out.println("hello");
-    }
+	System.out.println("Hello Github");
+            }
+}
+class TestOne {
+	int test;
+	int scope;
+	public int testFun( int scope){
+		i = 1;
+	}
 }
 
-class Fac {
-    public int ComputeFac( int num){
-        int num_aux ;
-        if (num < 1)
-            num_aux = 1 ;
-        else
-            num_aux = num*(this.ComputeFac(num - 1);
-        return num_aux ;
-    }
+// test 2 variable not initialised 
+class MainClass{ 
+    public static void main(String[] a){
+	System.out.println("Hello Github");
+            }
+}
+class TestOne {
+	public int testFun( int scope){
+		int i;
+		int j;
+		i = j;
+	}
+}
 
+/// test 3 variable wrong number of parameters
+class MainClass{ 
+    public static void main(String[] a){
+	System.out.println("Hello Github");
+            }
+}
+class TestOne {
+	public int testFun( int scope){
+		int j;
+		return this.testFun( scope , j );
+	}
+}
+/// test 4 already declared
+class MainClass{ 
+    public static void main(String[] a){
+	System.out.println("Hello Github");
+            }
+}
+class TestOne {
+	public int testFun( int scope){
+		int j;
+		int j;
+	}
+}
+
+// test 5 variable declared is not used
+
+class MainClass{ 
+    public static void main(String[] a){
+	System.out.println("Hello Github");
+            }
+}
+class TestOne {
+	public int testFun( int scope){
+		int j;
+		j=5;
+		int i ;
+		i= 2;
+		i= i +1;
+		return i;
+	}
 }
