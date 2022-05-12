@@ -8,6 +8,7 @@
 int i=0;
 int j=0;
 extern char nom[];
+extern int numval;
 
  void yyerror(char const *msg);
  void lexicerror ( const char *msg);
@@ -64,7 +65,7 @@ Error_comment                   \/\*([^(\*\/)]|\n)*
 "String"                              return TYPE_STRING;
 
 {Boolean}							  return BOOLEAN_LITERAL;
-{Integer}                             {yylval = atoi(yytext);return INTEGER_LITERAL;}
+{Integer}                             {numval = atoi(yytext);return INTEGER_LITERAL;}
 {String}							  return STRING_LITERAL;
 {Identifier}                          {strcpy(nom, yytext);return IDENTIFIER;}
 
@@ -76,12 +77,18 @@ Error_comment                   \/\*([^(\*\/)]|\n)*
 {Brace_close}                         return BRACE_CLOSE;
 
 "="	                                  return OP_AFFECT;
-"&&"                                  return OP_AND;
-"<"                                   return OP_LESS;
 "+"                                   return OP_ADD;
 "-"                                   return OP_SUBSTRACT;
 "*"                                   return OP_MULTIPLY;
 "!"                                   return OP_NOT;
+
+"&&"                                  return LOG_AND;
+"<"                                   return LOG_LESS;
+"<="                                  return LOG_EQLESS;
+">"                                   return LOG_MORE;
+">="                                  return LOG_EQMORE;
+"=="                                  return LOG_EQ;
+"!="                                  return LOG_DIF;
 
 ";"                                   return SEMI_COLON;
 "."                                   return DOT;
@@ -114,7 +121,7 @@ void yyerror(const char *str)
     if(str[0]=='s'){
         return;
     }
-    fprintf(stderr,"-->  %s\n",str);
+    fprintf(stderr,"#  %s\n",str);
 }
 
 void lexicerror ( const char *msg ){
@@ -147,5 +154,4 @@ void semanticwarning (char *nom){
 
 int yywrap()
 {
-
 }

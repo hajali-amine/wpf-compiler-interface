@@ -1,19 +1,27 @@
 %{
     #include "semantic.c"
+    #include "generator.c"
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
 
     char nom[256];
-
+    int numval;
+    char nomaff[256];
+    char oper[10];
+    int indexIf;
+    int indexWhile1;
+    int indexWhile2;
 	int yylex(void);
 	extern int yylineno;
 	extern int i;
     extern int j;
 	void yyerror(const char *str);
 	void syntaxerror (const char *str);
-	void Begin();
-    void End();
+	void BeginSemantique();
+	void BeginCodeGen();
+    void EndSemantique();
+    void EndCodeGen();
 %}
 
 %token IDENTIFIER
@@ -46,12 +54,18 @@
 %token BRACE_CLOSE
 
 %token OP_AFFECT
-%token OP_AND
-%token OP_LESS
 %token OP_ADD
 %token OP_SUBSTRACT
 %token OP_MULTIPLY
 %token OP_NOT
+
+%token LOG_AND
+%token LOG_LESS
+%token LOG_EQLESS
+%token LOG_MORE
+%token LOG_EQMORE
+%token LOG_EQ
+%token LOG_DIF
 
 %token SEMI_COLON
 %token DOT
@@ -69,11 +83,11 @@ Program		           : MainClass ClassDeclarationS
                        ;
 MainClass              : MainHead MainBody
                        ;
-MainHead               : ClassHead BRACE_OPEN KEYWORD_PUBLIC KEYWORD_MAIN { g_type = tVoid; verifierFoncID("main"); } PARENTHESE_OPEN TYPE_STRING {g_type = tString;}BRACKET_OPEN BRACKET_CLOSE
+MainHead               : ClassHead BRACE_OPEN KEYWORD_PUBLIC KEYWORD_MAIN{ g_type = tVoid; verifierFoncID("main"); } PARENTHESE_OPEN TYPE_STRING {g_type = tString;}BRACKET_OPEN BRACKET_CLOSE
                        | ClassHead BRACE_OPEN error KEYWORD_PUBLIC KEYWORD_MAIN PARENTHESE_OPEN TYPE_STRING BRACKET_OPEN BRACKET_CLOSE {syntaxerror ("public keyword missing");}
                        | ClassHead BRACE_OPEN error KEYWORD_MAIN PARENTHESE_OPEN TYPE_STRING BRACKET_OPEN BRACKET_CLOSE {syntaxerror ("public keyword missing");}
                        ;
-MainBody               : IDENTIFIER { verifierVarID(nom);} PARENTHESE_CLOSE { foncDecEnd(); } BRACE_OPEN StatementS  BRACE_CLOSE {finFonction();} MethodDeclarationS BRACE_CLOSE {finClass();}
+MainBody               : IDENTIFIER{ verifierVarID(nom);} PARENTHESE_CLOSE { foncDecEnd(); } BRACE_OPEN StatementS  BRACE_CLOSE {finFonction();} MethodDeclarationS BRACE_CLOSE {finClass();tabCodeInt[indextab]=creerCode("SORTIE");indextab++;}
                        ;
 ClassDeclarationS	   : ClassDeclaration ClassDeclarationS
                        |
@@ -108,10 +122,11 @@ MethodDeclarationS     : MethodDeclaration MethodDeclarationS
                        | MethodDeclaration error MethodDeclarationS {syntaxerror ("code out of method"); }
                        | MethodDeclaration MethodDeclarationS error {syntaxerror ("code out of method"); }
                        ;
-MethodDeclaration      : KEYWORD_PUBLIC Variable { verifierFoncID(nom); } PARENTHESE_OPEN VariableS PARENTHESE_CLOSE {foncDecEnd();} BRACE_OPEN StatementS  KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE {finFonction();}
+MethodDeclaration      : KEYWORD_PUBLIC Variable { verifierFoncID(nom); }PARENTHESE_OPEN VariableS PARENTHESE_CLOSE {foncDecEnd();} BRACE_OPEN StatementS  KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE {finFonction();}
                        | error KEYWORD_PUBLIC Variable PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN StatementS  KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE {syntaxerror ("public keyword missing"); }
                        | KEYWORD_PUBLIC error Identifier PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN StatementS  KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE {syntaxerror ("type missing"); }
                        | KEYWORD_PUBLIC Type error PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN StatementS  KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE {syntaxerror ("method name missing"); }
+                       //| KEYWORD_PUBLIC Type Identifier PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN StatementS error Expression SEMI_COLON BRACE_CLOSE {syntaxerror ("return keyword missing"); }
                        ;
 
 Type                   : TYPE_INT BRACKET_OPEN BRACKET_CLOSE { g_type = tInt; }
@@ -127,21 +142,24 @@ StatementS             : Statement StatementS
                        |
                        ;
 Statement              : BRACE_OPEN StatementS BRACE_CLOSE
+                       | BRACE_OPEN StatementS error {syntaxerror ("closing brace missing"); }
+                       | error StatementS BRACE_CLOSE {syntaxerror ("opening brace missing"); }
                        | VarDeclaration
-                       | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS KEYWORD_ELSE StatementS
+                       | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE {tabCodeInt[indextab]=creerCode("SIFAUX");indexIf=indextab;indextab++;}
+                            BRACE_OPEN StatementS BRACE_CLOSE {tabCodeInt[indextab]=creerCode("SAUT");indextab++;tabCodeInt[indexIf].operande=indextab;indexIf=indextab-1;}
+                            KEYWORD_ELSE BRACE_OPEN StatementS BRACE_CLOSE {tabCodeInt[indexIf].operande=indextab;}
                        | KEYWORD_IF error Expression PARENTHESE_CLOSE StatementS KEYWORD_ELSE StatementS {syntaxerror ("opening parentheses missing"); }
                        | KEYWORD_IF PARENTHESE_OPEN Expression error Statement KEYWORD_ELSE StatementS {syntaxerror ("closing parentheses missing"); }
                        | KEYWORD_IF error StatementS KEYWORD_ELSE StatementS {syntaxerror ("if condition missing"); }
-                       | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
+                       /*| KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
                        | KEYWORD_IF PARENTHESE_OPEN Expression error StatementS {syntaxerror ("closing parentheses missing"); }
-                       | KEYWORD_IF error StatementS {syntaxerror ("if condition missing"); }
-                       | KEYWORD_WHILE PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
-                       | KEYWORD_WHILE PARENTHESE_OPEN Expression error StatementS {syntaxerror ("closing parentheses missing"); }
-                       | KEYWORD_WHILE error Statement {syntaxerror ("while condition missing"); }
+                       | KEYWORD_IF error StatementS {syntaxerror ("if condition missing"); }*/
+                       | KEYWORD_WHILE {indexWhile1=indextab;} PARENTHESE_OPEN Expression PARENTHESE_CLOSE {tabCodeInt[indextab]=creerCode("TANTQUEFAUX");indexWhile2=indextab;indextab++;}
+                            BRACE_OPEN StatementS BRACE_CLOSE {tabCodeInt[indextab]=creerOp("TANTQUE",indexWhile1);indextab++;tabCodeInt[indexWhile2].operande=indextab;}
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression PARENTHESE_CLOSE SEMI_COLON
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression PARENTHESE_CLOSE error {syntaxerror ("semicolon missing"); }
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression error SEMI_COLON {syntaxerror ("closing parentheses missing"); }
-                       | Identifieraff OP_AFFECT Expression SEMI_COLON
+                       | Identifieraff OP_AFFECT Expression SEMI_COLON {tabCodeInt[indextab]=creerOp("STORE",getAddress(nomaff,table_local));indextab++;}
                        | Identifieraff OP_AFFECT Expression error {syntaxerror ("semicolon missing"); }
                        | Identifieraff OP_AFFECT error SEMI_COLON {syntaxerror ("second expression missing"); }
                        | Identifieraff error Expression SEMI_COLON{syntaxerror ("'=' expected"); }
@@ -151,7 +169,7 @@ Statement              : BRACE_OPEN StatementS BRACE_CLOSE
                        | Identifieraff BRACKET_OPEN Expression BRACKET_CLOSE error Expression SEMI_COLON {syntaxerror ("'=' expected"); }
                        | Identifieraff BRACKET_OPEN Expression BRACKET_CLOSE OP_AFFECT Expression error {syntaxerror ("semicolon missing"); }
                        ;
-Expression             : INTEGER_LITERAL ExpressionComp
+Expression             : INTEGER_LITERAL {tabCodeInt[indextab]=creerOp("LDC",numval);indextab++;}ExpressionComp
                        | BOOLEAN_LITERAL ExpressionComp
                        | STRING_LITERAL ExpressionComp
                        | Identifierexp ExpressionComp
@@ -173,7 +191,8 @@ Expression             : INTEGER_LITERAL ExpressionComp
                        | error Expression PARENTHESE_CLOSE ExpressionComp {syntaxerror ("opening parentheses missing"); }
                        | PARENTHESE_OPEN Expression error ExpressionComp {syntaxerror ("closing parentheses missing"); }
                        ;
-ExpressionComp         : Operator Expression ExpressionComp
+ExpressionComp         : Operator Expression {tabCodeInt[indextab]=creerCode(oper);indextab++;} ExpressionComp
+                       | Logic Expression {tabCodeInt[indextab]=creerCode(oper);indextab++;} ExpressionComp
                        | BRACKET_OPEN Expression BRACKET_CLOSE ExpressionComp
                        | BRACKET_OPEN Expression error ExpressionComp  {syntaxerror ("closing bracket missing"); }
                        | DOT KEYWORD_LENGTH ExpressionComp
@@ -192,17 +211,23 @@ ExpressionS            : Expression {g_nbParam ++;} COMMA ExpressionS
                        | Expression {g_nbParam ++;}
                        | Expression error ExpressionS {syntaxerror ("comma missing"); }
                        ;
-Operator               : OP_ADD
-                       | OP_AND
-                       | OP_LESS
-                       | OP_MULTIPLY
-                       | OP_SUBSTRACT
+Operator               : OP_ADD {strcpy(oper, "ADD");}
+                       | OP_MULTIPLY {strcpy(oper, "MUL");}
+                       | OP_SUBSTRACT {strcpy(oper, "SUB");}
+                       ;
+Logic                  : LOG_AND
+                       | LOG_LESS {strcpy(oper, "INF");}
+                       | LOG_EQLESS {strcpy(oper, "INFE");}
+                       | LOG_MORE {strcpy(oper, "SUP");}
+                       | LOG_EQMORE {strcpy(oper, "SUPE");}
+                       | LOG_EQ {strcpy(oper, "EGAL");}
+                       | LOG_DIF {strcpy(oper, "DIF");}
                        ;
 Identifier             : IDENTIFIER
                        ;
-Identifierexp          : IDENTIFIER {checkID(nom);}
+Identifierexp          : IDENTIFIER {checkID(nom);tabCodeInt[indextab]=creerOp("LDV",getAddress(nom,table_local));indextab++;}
                        ;
-Identifieraff          : IDENTIFIER {checkIDOnInit(nom);}
+Identifieraff          : IDENTIFIER {checkIDOnInit(nom); strcpy(nomaff, nom);}
                        ;
 
 
@@ -215,15 +240,15 @@ extern FILE *yyin;
 int main(int argc, char **argv)
 {
     yyin = fopen(argv[1], "r");
-    Begin();
+    BeginCodeGen();
+    BeginSemantique();
     yyparse();
-    End();
+    EndSemantique();
+    EndCodeGen();
     return 1;
 }
 
-
-
-void Begin()
+void BeginSemantique()
 {
 	table = NULL;
 	table_local = NULL;
@@ -238,23 +263,35 @@ void Begin()
     g_IfClass = 0 ;
 }
 
-void End()
+void BeginCodeGen(){
+    indextab = 0;
+}
+
+void EndCodeGen(){
+    genererCode();
+}
+
+void EndSemantique()
 {
     fclose(yyin);
     char c;
     c=' ';
     if(i>1)
         c='s';
+	if(i==0)
+        printf("no errors were found\n");
+    else
         printf("%d error%c found\n",i,c);
     c=' ';
-    if(j>0)
+    if(j>1)
         c='s';
-    printf("%d warnings %c found\n",j,c);
-	
+    if(j!=0){
+		if(i==0)
+        printf("%d warning%c found\n",j,c);
+	}
+
 
     destructSymbolsTable(table_local);
 	destructSymbolsTable(table);
 	destructSymbolsTable(table_class);
-	exit(0);
 }
-

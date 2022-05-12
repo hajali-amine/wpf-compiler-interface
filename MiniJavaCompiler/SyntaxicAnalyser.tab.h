@@ -65,15 +65,20 @@
      BRACE_OPEN = 281,
      BRACE_CLOSE = 282,
      OP_AFFECT = 283,
-     OP_AND = 284,
-     OP_LESS = 285,
-     OP_ADD = 286,
-     OP_SUBSTRACT = 287,
-     OP_MULTIPLY = 288,
-     OP_NOT = 289,
-     SEMI_COLON = 290,
-     DOT = 291,
-     COMMA = 292
+     OP_ADD = 284,
+     OP_SUBSTRACT = 285,
+     OP_MULTIPLY = 286,
+     OP_NOT = 287,
+     LOG_AND = 288,
+     LOG_LESS = 289,
+     LOG_EQLESS = 290,
+     LOG_MORE = 291,
+     LOG_EQMORE = 292,
+     LOG_EQ = 293,
+     LOG_DIF = 294,
+     SEMI_COLON = 295,
+     DOT = 296,
+     COMMA = 297
    };
 #endif
 

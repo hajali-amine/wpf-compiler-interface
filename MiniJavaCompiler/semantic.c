@@ -7,15 +7,12 @@ TABLE_NOUED table, table_local, table_class;
 
 NOEUD g_noeud, g_noeudFonc, g_noeudClass;
 
-// variable helpers , g-type indique le type , giffonc indique qu'il s'agit d'une fonction ,g_IfFoncParameters indique si la fonction contient des parametres ,g_IfClass indique qu'il s'agit d'une classe , g_nbParam indique le nombre de parametres
 TYPE_IDENTIFIER g_type;
 int g_IfFonc;
 int g_IfFoncParameters;
 int g_IfClass;
 int g_nbParam;
 
-
-// fonctions principales creation , insertion et recherche
 NOEUD creer (const char* nom, TYPE_IDENTIFIER type, CLASS classs, NOEUD suivant){
     NOEUD noeud = (NOEUD)malloc(sizeof(struct NOEUD));
     noeud->nom = (char *)malloc(strlen(nom)+2);
@@ -55,7 +52,21 @@ NOEUD chercher (const char* nom, TABLE_NOUED table) {
     return NULL;
 }
 
-//destruction d'une table de noeud 
+int getAddress (const char* nom, TABLE_NOUED table) {
+    if( !table )
+        return -1;
+    NOEUD noeud = table;
+    int pos=0;
+    while( noeud ){
+        if (strcmp(nom, noeud->nom) == 0){
+            return pos;
+        }
+        pos++;
+        noeud = noeud->suivant;
+    }
+    return -1;
+}
+
 void destructSymbolsTable( TABLE_NOUED table )
 {
     if( !table )
@@ -69,7 +80,7 @@ void destructSymbolsTable( TABLE_NOUED table )
     }
 }
 
-// pour debugger cette fonction affiche les symboles de tableau de symboles
+
 void DisplaySymbolsTable( TABLE_NOUED SymbolsTable ){
     if( !SymbolsTable )
         return;
@@ -137,7 +148,7 @@ void DisplaySymbolsTable( TABLE_NOUED SymbolsTable ){
     }
 }
 
-// verifiée qu'une identificateur d'une variable est declarée une seul fois , donc ne pas repeter les indentificateurs 
+
 void verifierVarID (char* nom){
     CLASS classs;
     if (g_IfFonc){
@@ -148,7 +159,7 @@ void verifierVarID (char* nom){
             classs = variable;
         }
         if(chercher(nom, table_local) ){
-            semanticerror(concat("variable indentifer is already defined ! :", nom));
+            semanticerror(concat("variable identifier already defined: ", nom));
         }else{
             NOEUD noeud = creer(nom, g_type, classs, NULL);
             table_local = insert(noeud, table_local);
@@ -165,8 +176,6 @@ void verifierVarID (char* nom){
     }
 }
 
-
-// verifiée qu'une identificateur d'une fonction est declarée une seul fois , donc ne pas repeter les indentificateurs 
 void verifierFoncID (char* nom){
          if( chercher(nom, table) ){
                                 semanticerror(concat("fonction identifier already defined: ", nom));
@@ -178,7 +187,6 @@ void verifierFoncID (char* nom){
                             g_IfFoncParameters = 1;
 }
 
-// verifiée qu'une identificateur d'une classe est declarée une seul fois , donc ne pas repeter les indentificateurs 
 void verifierClassID (char* nom){
          if( chercher(nom, table_class) ){
                                 semanticerror(concat("class identifier already defined: ", nom));
@@ -189,7 +197,6 @@ void verifierClassID (char* nom){
                             g_IfClass = 1;
 }
 
-// fonction indiquant la fin de fonction donc reinitialiser les variables helpers necessaires
 void foncDecEnd(){
     if(!g_noeudFonc)
         return;
@@ -198,7 +205,6 @@ void foncDecEnd(){
     g_IfFoncParameters = 0;
 }
 
-// verifier si le nombre de parametres d'une fonction est correct ainsi que la fin d'appel d'une fonction donc reinitialiser les variables helpers 
 void foncCallEnd(){
     if(!g_noeudFonc)
         return;
@@ -207,7 +213,6 @@ void foncCallEnd(){
     g_nbParam = 0;
 }
 
-// verifier qu'une variable utilisée est bien declarée 
 int verifierIDDeclare (char* nom){
     NOEUD noeud;
     if (g_IfFonc){
@@ -216,7 +221,7 @@ int verifierIDDeclare (char* nom){
             noeud = chercher(nom, table);
             if( !noeud ){
                 semanticerror(concat("variable undeclared: ", nom));
-                End();
+                EndSemantique();
                 return 0;
             }else
             {
@@ -230,7 +235,7 @@ int verifierIDDeclare (char* nom){
         noeud = chercher(nom, table);
         if( !noeud ){
             semanticerror(concat("variable undeclared: ", nom));
-            End();
+            EndSemantique();
             return 0;
         }else
         {
@@ -240,8 +245,6 @@ int verifierIDDeclare (char* nom){
     return 1;
 }
 
-
-// verifier qu'une variable utilisée est bien declarée 
 int verifierIDDeclareOnInit (char* nom){
 
     NOEUD noeud;
@@ -251,7 +254,7 @@ int verifierIDDeclareOnInit (char* nom){
             noeud = chercher(nom, table);
             if( !noeud ){
                 semanticerror(concat("variable undeclared: ", nom));
-                End();
+                EndSemantique();
                 return 0;
             }
         }
@@ -259,14 +262,13 @@ int verifierIDDeclareOnInit (char* nom){
         noeud = chercher(nom, table);
         if( !noeud ){
             semanticerror(concat("variable undeclared: ", nom));
-            End();
+            EndSemantique();
             return 0;
         }
     }
     return 1;
 }
 
-// initialiser une variable
 void initVar (char* nom){
     NOEUD noeud;
     if (g_IfFonc){
@@ -280,8 +282,6 @@ void initVar (char* nom){
     noeud->isInit = 1;
 }
 
-
-// verifier une variable declarée est initialisée 
 void verifierVarInitialise (char* nom){
 
     NOEUD noeud;
@@ -299,7 +299,6 @@ void verifierVarInitialise (char* nom){
         semanticerror(concat("attribute not initialised: ", nom));
 }
 
-// cette fonction indique la fin de fonction donc la reinitialisation du tableau local des variables
 void finFonction()
 {
     //printf("-------\n");
@@ -321,7 +320,6 @@ void finFonction()
     }
 }
 
-// fin de classe et reinitialisation de tableau local
 void finClass()
 {
     if (g_IfClass == 1){
@@ -331,14 +329,13 @@ void finClass()
 }
 
 
-// verifier si un id est declaré puis initialisé
+
 void checkID(char* nom){
     if(verifierIDDeclare(nom)) {
         verifierVarInitialise(nom);
     }
 }
 
-// verifier si une fonction est declarée 
 void verifierFoncIDDeclare(char* nom){
     NOEUD noeud;
         noeud = chercher(nom, table);
@@ -352,7 +349,7 @@ void verifierFoncIDDeclare(char* nom){
 }
 
 
-// verifier si la variable est declaré avant de l'initialiser 
+
 void checkIDOnInit(char* nom){
     if(verifierIDDeclareOnInit(nom)) {
         initVar(nom);
@@ -360,16 +357,6 @@ void checkIDOnInit(char* nom){
 }
 
 
-
-
-
-
-
-
-
-
-// helpers fonctions
-// concatenation
 char* concat(const char* s1, char* s2){
     char* message;
     message = malloc(strlen(s1)+ strlen(s2)+2);
